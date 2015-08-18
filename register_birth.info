@@ -1,0 +1,5 @@
+name = Register with date of birth
+core = 7.x
+package = Other
+version = 7.x-1.0
+files[] = register_birth.module

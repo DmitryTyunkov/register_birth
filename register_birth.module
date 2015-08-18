@@ -1,0 +1,45 @@
+<?php
+/**
+ * @file
+ * register_birth.module
+ */
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function register_birth_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  array_unshift($form['#validate'], 'register_birth_user_register_form_validate');
+  $form['date-of-birth'] = array(
+    '#type' => 'date',
+    '#title' => t('Date of birth'),
+    '#description' => t('You must be over 18 years old'),
+    '#required' => TRUE,
+  );
+}
+
+/**
+ * Validate function for register_birth_form_user_register_form_alter.
+ * @param $form
+ * @param $form_state
+ */
+function register_birth_user_register_form_validate($form, &$form_state) {
+  $now = new DateTime();
+  $birth = new DateTime();
+  $adulthood = new DateTime();
+  $adulthood->setDate($now->format('Y')-18, $now->format('m'), $now->format('d'));
+  $birth->setDate($form_state['values']['date-of-birth']['year'],
+    $form_state['values']['date-of-birth']['month'],
+    $form_state['values']['date-of-birth']['day']);
+  if($birth > $adulthood) {
+    form_set_error('date-of-birth', t('Age should be more than 18'));
+  }
+  /*$age = date('Y') - $form_state['values']['date-of-birth']['year'];
+  if(date('m') < $form_state['values']['date-of-birth']['month'] ||
+    date('m') == $form_state['values']['date-of-birth']['month'] &&
+    date('d') < $form_state['values']['date-of-birth']['day']) {
+    $age--;
+  }
+  if($age < 18) {
+    form_set_error('date-of-birth', t('Age should be more than 18'));
+  }*/
+}
