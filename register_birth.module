@@ -23,15 +23,14 @@ function register_birth_form_user_register_form_alter(&$form, &$form_state, $for
  * @param $form_state
  */
 function register_birth_user_register_form_validate($form, &$form_state) {
-  $now = new DateTime();
-  $now->modify("-18 year");
+  $now = new DateTime('-18 years');
   $now->setTime(0,0,0);
   $birth = new DateTime();
   $birth->setDate($form_state['values']['date-of-birth']['year'],
     $form_state['values']['date-of-birth']['month'],
     $form_state['values']['date-of-birth']['day']);
   $birth->setTime(0,0,0);
-  if($birth > $now) {
+  if($now < $birth) {
     form_set_error('date-of-birth', t('Age should be more than 18'));
   }
   /*$age = date('Y') - $form_state['values']['date-of-birth']['year'];
@@ -44,3 +43,4 @@ function register_birth_user_register_form_validate($form, &$form_state) {
     form_set_error('date-of-birth', t('Age should be more than 18'));
   }*/
 }
+
